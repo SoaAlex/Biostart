@@ -1,6 +1,5 @@
 <template>
   <div class="Monitoring">
-    <Navbar />
     <b-container fluid="xl">
       <b-row>
         <b-col sm="8">
@@ -19,14 +18,12 @@
 
 <script>
 // @ is an alias to /src
-import Navbar from "@/components/Navbar.vue";
 import PressureChart from "@/components/PressureChart.vue";
 import Statistics from "@/components/Statistics.vue";
 
 export default {
   name: "Monitoring",
   components: {
-    Navbar,
     PressureChart,
     Statistics
   }

@@ -1,27 +1,17 @@
 <template>
-  <div class="Monitoring">
-    <Navbar />
-    <b-container fluid="xl">
-      <b-row>
-        <b-col>
-          Overview diagram here
-        </b-col>
-      </b-row>
-    </b-container>
+  <div class="Overview">
+    <Diagram />
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import Navbar from "@/components/Navbar.vue";
+//import SVG from "@/components/SVG.vue";
+import Diagram from "@/components/Diagram.vue";
 
 export default {
-  name: "Monitoring",
+  name: "Overview",
   components: {
-    Navbar
+    Diagram
   }
 };
 </script>
-
-<style scoped>
-</style>
