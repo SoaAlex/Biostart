@@ -1,17 +1,72 @@
 <template>
   <div class="Overview">
-    <Diagram />
+    <img alt="Diagram" src="../assets/F1_Eau.png" class="diagram" />
+    <!-- Absolute positionning of values -->
+    <div class="debit-amont">{{ debit_amont }} L³/s</div>
+    <div class="pression-amont">{{ pression_amont }} BAR</div>
+    <div class="pression-aval">{{ pression_aval }} BAR</div>
   </div>
 </template>
 
 <script>
-//import SVG from "@/components/SVG.vue";
-import Diagram from "@/components/Diagram.vue";
-
 export default {
   name: "Overview",
-  components: {
-    Diagram
+  data: function() {
+    return {
+      debit_amont: 5,
+      pression_amont: 7,
+      pression_aval: 4
+    };
   }
 };
 </script>
+
+<style scoped>
+.diagram {
+  max-width: 100%;
+  margin-top: 7%;
+}
+
+.text {
+  padding: 0%;
+  color: #000000 !important;
+  font-size: 20px;
+  font-family: Monaco, monospace !important;
+}
+
+.debit-amont {
+  position: relative;
+  top: -210px;
+  left: -44%;
+  margin: 0;
+  font-family: Monaco, monospace !important;
+  font-weight: bold;
+  font-size: 22px;
+  letter-spacing: -4px;
+  color: green;
+}
+
+.pression-amont {
+  position: relative;
+  top: -132px;
+  left: -316px;
+  margin: 0;
+  font-family: Monaco, monospace !important;
+  font-weight: bold;
+  font-size: 25px;
+  word-spacing: -10px;
+  color: red;
+}
+
+.pression-aval {
+  position: relative;
+  top: -169px;
+  left: 320px;
+  margin: 0;
+  font-family: Monaco, monospace !important;
+  font-weight: bold;
+  font-size: 25px;
+  word-spacing: -10px;
+  color: red;
+}
+</style>
