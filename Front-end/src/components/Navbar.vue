@@ -29,11 +29,11 @@ export default {
   el: "#Navbar",
   data: function() {
     return {
-      timestamp: "Loading..."
+      timestamp: ""
     };
   },
   created() {
-    setInterval(this.getNow, 1000);
+    setInterval(this.getNow, 0);
   },
   methods: {
     getNow: function() {
