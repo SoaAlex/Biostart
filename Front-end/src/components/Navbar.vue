@@ -2,7 +2,7 @@
   <div class="Navbar">
     <!-- Just an image -->
     <b-navbar variant="info" type="dark">
-      <b-navbar-brand>
+      <b-navbar-brand class="brand">
         <img
           alt="Biostart logo"
           src="../assets/Logo-biostart.png"
@@ -13,6 +13,9 @@
         <router-link to="/monitoring" class="nav-text">Monitoring</router-link>
         <router-link to="/overview" class="nav-text" style="margin-left: 20px"
           >Overview</router-link
+        >
+        <router-link to="/control" class="nav-text" style="margin-left: 20px"
+          >Control</router-link
         >
       </b-navbar-nav>
 
@@ -80,5 +83,9 @@ export default {
   color: #000000 !important;
   font-size: 20px;
   font-family: Monaco, monospace !important;
+}
+
+.brand {
+  margin: 0;
 }
 </style>

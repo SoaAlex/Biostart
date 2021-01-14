@@ -1,8 +1,9 @@
 <template>
   <div class="Overview">
-    <img alt="Diagram" src="../assets/F1_Eau.png" class="diagram" />
+    <p class="title">System overview</p>
+    <img alt="Diagram" src="../assets/F1_Eau_F2_Eau.png" class="diagram" />
     <!-- Absolute positionning of values -->
-    <div class="debit-amont">{{ debit_amont }} L³/s</div>
+    <div class="debit-amont">{{ debit_amont }} M³/s</div>
     <div class="pression-amont">{{ pression_amont }} BAR</div>
     <div class="pression-aval">{{ pression_aval }} BAR</div>
   </div>
@@ -24,7 +25,7 @@ export default {
 <style scoped>
 .diagram {
   max-width: 100%;
-  margin-top: 7%;
+  margin-top: 0%;
 }
 
 .text {
@@ -36,20 +37,21 @@ export default {
 
 .debit-amont {
   position: relative;
-  top: -210px;
+  top: -212px;
   left: -44%;
   margin: 0;
   font-family: Monaco, monospace !important;
   font-weight: bold;
   font-size: 22px;
-  letter-spacing: -4px;
+  letter-spacing: -1px;
+  word-spacing: -5px;
   color: green;
 }
 
 .pression-amont {
   position: relative;
-  top: -132px;
-  left: -316px;
+  top: -136px;
+  left: -315px;
   margin: 0;
   font-family: Monaco, monospace !important;
   font-weight: bold;
@@ -60,13 +62,19 @@ export default {
 
 .pression-aval {
   position: relative;
-  top: -169px;
-  left: 320px;
+  top: -173px;
+  left: 319px;
   margin: 0;
   font-family: Monaco, monospace !important;
   font-weight: bold;
   font-size: 25px;
   word-spacing: -10px;
   color: red;
+}
+
+.title {
+  font-family: Monaco, monospace !important;
+  font-size: 30px;
+  font-weight: bold;
 }
 </style>
