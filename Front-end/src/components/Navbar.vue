@@ -32,6 +32,8 @@ export default {
   el: "#Navbar",
   data: function() {
     return {
+      date: "",
+      time: "",
       timestamp: ""
     };
   },
@@ -44,13 +46,12 @@ export default {
       var year = today.getFullYear();
       var month = ("0" + today.getMonth() + 1).substr(-2);
       var day = ("0" + today.getDate()).substr(-2);
-      var date = day + "-" + month + "-" + year;
+      this.date = day + "-" + month + "-" + year;
       var currentHours = ("0" + today.getHours()).substr(-2);
       var currentMins = ("0" + today.getMinutes()).substr(-2);
       var currentSecs = ("0" + today.getSeconds()).substr(-2);
-      var time = currentHours + ":" + currentMins + ":" + currentSecs;
-      var dateTime = date + " | " + time;
-      this.timestamp = dateTime;
+      this.time = currentHours + ":" + currentMins + ":" + currentSecs;
+      this.timestamp = this.date + " | " + this.time;
     }
   }
 };
@@ -75,7 +76,7 @@ export default {
 
 .clock {
   color: #000000 !important;
-  font-size: 20px;
+  font-size: 18px;
   font-family: Monaco, monospace !important;
 }
 

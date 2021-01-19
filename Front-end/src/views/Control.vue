@@ -30,7 +30,7 @@
         ></b-form-checkbox-group>
       </b-form-group>
 
-      <p class="title2">Filter 2</p>
+      <p class="title_cp2">Filter 2</p>
       <hr style="padding: 0;" />
       <b-form-group
         label="Select flow"

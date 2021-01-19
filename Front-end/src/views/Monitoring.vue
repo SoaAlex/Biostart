@@ -3,10 +3,9 @@
     <b-container fluid="xl">
       <b-row>
         <b-col sm="8">
-          Débit en amont / aval
-          <PressureChart height="148px" />
-          Pression en amont / aval
-          <PressureChart height="148px" />
+          Débit en amont
+          <FlowChart height="148px" />
+          <PressureChart height="190" />
         </b-col>
         <b-col sm="4">
           <Statistics />
@@ -19,13 +18,15 @@
 <script>
 // @ is an alias to /src
 import PressureChart from "@/components/PressureChart.vue";
+import FlowChart from "@/components/FlowChart.vue";
 import Statistics from "@/components/Statistics.vue";
 
 export default {
   name: "Monitoring",
   components: {
     PressureChart,
-    Statistics
+    Statistics,
+    FlowChart
   }
 };
 </script>
