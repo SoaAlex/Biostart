@@ -1,34 +1,41 @@
 <template>
   <div class="statistics">
     <b-container fluid>
-      <b-row>
+      <b-row class="margin">
         <b-col>
-          <p>Active Biostart© Filter</p>
-          <p class="big">Filter N°{{ activeFilter }}</p>
+          <p>Filter 1 state</p>
+          <p class="big">{{ filterState[0] }}</p>
         </b-col>
       </b-row>
-      <b-row>
+      <b-row class="margin">
         <b-col>
-          <p>Current Pressure</p>
-          <p class="big">{{ currPressure }} BAR</p>
+          <p>F1 Total volume filtere</p>
+          <p class="big">{{ totalFiltered[0] }} L³</p>
         </b-col>
       </b-row>
-      <b-row>
+      <b-row class="margin">
         <b-col>
-          <p>Current Flow</p>
-          <p class="big">{{ currFlow }} L³/s</p>
+          <p>F1 Remaining capacity</p>
+          <p class="big warning">{{ remainingCapacity[0] }} L³</p>
         </b-col>
       </b-row>
-      <b-row>
+      <hr class="line" />
+      <b-row class="margin">
         <b-col>
-          <p>Total volume filtered</p>
-          <p class="big">{{ totalFiltered }} L³</p>
+          <p>Filter 2 state</p>
+          <p class="big">{{ filterState[1] }}</p>
         </b-col>
       </b-row>
-      <b-row>
+      <b-row class="margin">
         <b-col>
-          <p>Remaining filtering capacity</p>
-          <p class="big warning">{{ remainingCapacity }} L³</p>
+          <p>F1 Total volume filtered</p>
+          <p class="big">{{ totalFiltered[1] }} L³</p>
+        </b-col>
+      </b-row>
+      <b-row class="margin">
+        <b-col>
+          <p>F2 Remaining capacity</p>
+          <p class="big">{{ remainingCapacity[1] }} L³</p>
         </b-col>
       </b-row>
     </b-container>
@@ -41,11 +48,9 @@ export default {
   el: "statistics",
   data() {
     return {
-      currPressure: 5,
-      currFlow: 36,
-      totalFiltered: 12863,
-      remainingCapacity: 3,
-      activeFilter: 1
+      totalFiltered_1: ["", ""],
+      remainingCapacity: ["", ""],
+      filterState: ["", ""]
     };
   },
   created() {
@@ -54,8 +59,14 @@ export default {
   methods: {
     update: function() {
       this.axios
-        .get("http://192.168.1.10:3000/filtering")
+        .get(this.$store.state.serverIP + "/total-filtered")
         .then(response => (this.totalFiltered = response.data));
+      this.axios
+        .get(this.$store.state.serverIP + "/remaining-filter")
+        .then(response => (this.remainingCapacity = response.data));
+      this.axios
+        .get(this.$store.state.serverIP + "/filter-state")
+        .then(response => (this.filterState = response.data));
     }
   }
 };
@@ -63,7 +74,7 @@ export default {
 
 <style scoped>
 .big {
-  margin-top: -10px;
+  margin-top: -15px;
   /*margin-bottom: 35px;*/
   font-size: x-large;
   color: #00b900;
@@ -73,5 +84,16 @@ export default {
 .warning {
   color: #ffffff !important;
   background-color: #ff0000;
+}
+
+.margin {
+  margin-bottom: -10px;
+}
+
+.line {
+  margin: 3px;
+  margin-left: -10px;
+  margin-right: -10px;
+  border-top: 5px solid black;
 }
 </style>

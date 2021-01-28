@@ -5,7 +5,11 @@
         <b-col sm="8">
           Débit en amont
           <FlowChart height="148px" />
-          <PressureChart height="190" />
+          <PressureChart
+            :data="dataChart"
+            :options="{ responsive: true, maintainAspectRatio: false }"
+            height="190"
+          />
         </b-col>
         <b-col sm="4">
           <Statistics />
@@ -27,6 +31,18 @@ export default {
     PressureChart,
     Statistics,
     FlowChart
+  },
+  data: function() {
+    return {
+      dataChart: [[""], [0], [0]]
+    };
+  },
+  methods: {
+    update: function() {
+      this.axios
+        .get(this.$store.state.serverIP + "/data-pressure")
+        .then(response => (this.dataChart = response.data));
+    }
   }
 };
 </script>
