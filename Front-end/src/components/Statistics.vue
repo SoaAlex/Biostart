@@ -47,6 +47,16 @@ export default {
       remainingCapacity: 3,
       activeFilter: 1
     };
+  },
+  created() {
+    setInterval(this.update, 5000);
+  },
+  methods: {
+    update: function() {
+      this.axios
+        .get("http://192.168.1.10:3000/filtering")
+        .then(response => (this.totalFiltered = response.data));
+    }
   }
 };
 </script>

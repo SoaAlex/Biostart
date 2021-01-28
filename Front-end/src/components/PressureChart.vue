@@ -1,14 +1,13 @@
 <script>
 import { Line } from "vue-chartjs";
 
-
 export default {
   extends: Line,
   mounted() {
     this.renderChart(
       {
         labels: [
-          "11:48:21", 
+          "11:48:21",
           "11:49:21",
           "11:50:21",
           "11:51:21",
@@ -42,14 +41,76 @@ export default {
         datasets: [
           {
             label: "Pression Amont (mbar)",
-            data: [4,4,4,4,4,75,78,77,76,61,60,60,94,130,102,91,78,79,85,83,87,94,92,93,94,96,95,95,95,96],
+            data: [
+              4,
+              4,
+              4,
+              4,
+              4,
+              75,
+              78,
+              77,
+              76,
+              61,
+              60,
+              60,
+              94,
+              130,
+              102,
+              91,
+              78,
+              79,
+              85,
+              83,
+              87,
+              94,
+              92,
+              93,
+              94,
+              96,
+              95,
+              95,
+              95,
+              96
+            ],
             backgroundColor: "transparent",
             borderColor: "rgba(116, 0, 0, 0.50)",
             pointBackgroundColor: "rgba(171, 71, 188, 1)"
           },
           {
             label: "Pression Aval (mbar)",
-            data: [24,24,24,24,24,99,135,132,131,74,73,73,92,856,879,185,85,86,90,89,1289,154,152,153,152,152,152,152,152,152],
+            data: [
+              24,
+              24,
+              24,
+              24,
+              24,
+              99,
+              135,
+              132,
+              131,
+              74,
+              73,
+              73,
+              92,
+              856,
+              879,
+              185,
+              85,
+              86,
+              90,
+              89,
+              1289,
+              154,
+              152,
+              153,
+              152,
+              152,
+              152,
+              152,
+              152,
+              152
+            ],
             backgroundColor: "transparent",
             borderColor: "rgba(1, 116, 188, 0.50)",
             pointBackgroundColor: "rgba(171, 71, 188, 1)"
@@ -58,42 +119,30 @@ export default {
       },
       {
         responsive: true,
-        maintainAspectRatio: false,
+        maintainAspectRatio: false
         /*title: {
           display: true,
           text: "Pression"
         }*/
       }
-    );  },
-  data: function () {
-      return {
-        config: /* Papa Parse config object */ {
-          delimiter: "", // auto-detect
-          newline: "", // auto-detect
-          quoteChar: '"',
-          escapeChar: '"',
-          header: true,
-          dynamicTyping: true,
-          preview: 0,
-          encoding: "",
-          delimitersToGuess: [',', '\t', '|', ';']
-          // ?? callback function ??
-        },
-          availability: {}
-      }
-    },
-  methods: {
-    readFile() {
-        /* return first object in FileList */
-        var file = new File(['string'], "Echantillon-de-données-Biostart-du-2606-au-1207.csv")
-        this.$papa.parse(file, {
-            header: true,
-            complete: function (results) {
-                this.availability = results.data;
-                console.log(this.availability);
-            }
-        });
-    }
+    );
+  },
+  data: function() {
+    return {
+      config: /* Papa Parse config object */ {
+        delimiter: "", // auto-detect
+        newline: "", // auto-detect
+        quoteChar: '"',
+        escapeChar: '"',
+        header: true,
+        dynamicTyping: true,
+        preview: 0,
+        encoding: "",
+        delimitersToGuess: [",", "\t", "|", ";"]
+        // ?? callback function ??
+      },
+      availability: {}
+    };
   }
 };
 </script>
