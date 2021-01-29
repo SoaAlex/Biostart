@@ -3,13 +3,8 @@
     <b-container fluid="xl">
       <b-row>
         <b-col sm="8">
-          Débit en amont
-          <FlowChart height="148px" />
-          <PressureChart
-            :data="dataChart"
-            :options="{ responsive: true, maintainAspectRatio: false }"
-            height="190"
-          />
+          <FlowChart />
+          <PressureChart />
         </b-col>
         <b-col sm="4">
           <Statistics />

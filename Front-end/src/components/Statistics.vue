@@ -16,7 +16,7 @@
       <b-row class="margin">
         <b-col>
           <p>F1 Remaining capacity</p>
-          <p class="big warning">{{ remainingCapacity[0] }} L³</p>
+          <p class="big">{{ remainingCapacity[0] }} L³</p>
         </b-col>
       </b-row>
       <hr class="line" />
@@ -28,14 +28,14 @@
       </b-row>
       <b-row class="margin">
         <b-col>
-          <p>F1 Total volume filtered</p>
+          <p>F2 Total volume filtered</p>
           <p class="big">{{ totalFiltered[1] }} L³</p>
         </b-col>
       </b-row>
       <b-row class="margin">
         <b-col>
           <p>F2 Remaining capacity</p>
-          <p class="big">{{ remainingCapacity[1] }} L³</p>
+          <p class="big warning">{{ remainingCapacity[1] }} L³</p>
         </b-col>
       </b-row>
     </b-container>
@@ -54,6 +54,7 @@ export default {
     };
   },
   created() {
+    this.update();
     setInterval(this.update, 5000);
   },
   methods: {
