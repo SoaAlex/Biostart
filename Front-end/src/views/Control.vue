@@ -27,6 +27,7 @@
           size="lg"
           name="buttons-2"
           class="center"
+          @click.native="updateState()"
         ></b-form-checkbox-group>
       </b-form-group>
 
