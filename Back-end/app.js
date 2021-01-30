@@ -21,7 +21,7 @@ app.get('/remaining-filter', (req, res) => {
 })
 
 app.get('/filter-state', (req, res) => {
-  res.send(["WATER", "INACTIVE"]) // [0] = Filtre 1 | [1] = Filtre 2 | Peut prendre les valeurs "WATER" , "CLEANING" ou "INACTIVE"
+  res.send(["WATER", "CLEANING"]) // [0] = Filtre 1 | [1] = Filtre 2 | Peut prendre les valeurs "WATER" , "CLEANING" ou "INACTIVE"
 })
 
 app.get('/data-pressure', (req, res) => { // [0] = Pression Amont | [1] = Pression aval | [2] = timestamp du prélèvement (date ou heure à réfléchir)
@@ -37,6 +37,14 @@ app.get('/data-flow', (req, res) => {
     ["11:48:21","11:49:21","11:50:21","11:51:21","11:52:21","11:53:21","11:54:21","11:55:21","11:56:21","11:57:21","11:58:21","11:59:21","12:00:21","12:01:21","12:02:21","12:03:21",
     "12:04:21","12:05:21","12:06:21","12:07:21","12:08:21","12:09:21","12:10:21","12:11:21","12:12:21","12:13:21","12:14:21","12:15:21","12:16:21","12:17:21"
   ]])
+})
+
+app.get('/current-data', (req, res) => {
+  res.send([5, 10, 11])
+})
+
+app.get('/set-state', (req, res) => {
+  // Récuperer le state envoyé...
 })
 
 app.listen(port, () => {

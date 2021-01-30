@@ -1,7 +1,7 @@
 <template>
   <div class="Overview">
     <p class="title">System overview</p>
-    <img alt="Diagram" src="../assets/F1_Eau_F2_Eau.png" class="diagram" />
+    <img :src="imageSrc" alt="Diagram" class="diagram" />
     <!-- Absolute positionning of values -->
     <div class="debit-amont">{{ debit_amont }} M³/s</div>
     <div class="pression-amont">{{ pression_amont }} BAR</div>
@@ -16,8 +16,68 @@ export default {
     return {
       debit_amont: 5,
       pression_amont: 7,
-      pression_aval: 4
+      pression_aval: 4,
+      imageSrc: require("@/assets/Diagrammes/F1_Eau/F1_Eau.png")
     };
+  },
+  methods: {
+    update: function() {
+      // First get filter state
+      this.axios
+        .get(this.$store.state.serverIP + "/filter-state")
+        .then(response => {
+          if (response.data[0] == "WATER" && response.data[1] == "INACTIVE") {
+            this.imageSrc = require("@/assets/Diagrammes/F1_Eau/F1_Eau.png");
+          } else if (
+            response.data[0] == "WATER" &&
+            response.data[1] == "WATER"
+          ) {
+            this.imageSrc = require("@/assets/Diagrammes/F1_Eau_F2_Eau/F1_Eau_F2_Eau.png");
+          } else if (
+            response.data[0] == "WATER" &&
+            response.data[1] == "CLEANING"
+          ) {
+            this.imageSrc = require("@/assets/Diagrammes/F1_Eau_F2_Net/F1_Eau_F2_Net.png"); // Fuck, j'ai oublié cette version
+          } else if (
+            response.data[0] == "CLEANING" &&
+            response.data[1] == "INACTIVE"
+          ) {
+            this.imageSrc = require("@/assets/Diagrammes/F1_Net/F1_Net.png");
+          } else if (
+            response.data[0] == "CLEANING" &&
+            response.data[1] == "WATER"
+          ) {
+            this.imageSrc = require("@/assets/Diagrammes/F1_Net_F2_Eau/F1_Net_F2_Eau.png");
+          } else if (
+            response.data[0] == "CLEANING" &&
+            response.data[1] == "CLEANING"
+          ) {
+            this.imageSrc = require("@/assets/Diagrammes/F1_Net_F2_Net/F1_Net_F2_Net.png");
+          } else if (
+            response.data[0] == "INACTIVE" &&
+            response.data[1] == "WATER"
+          ) {
+            this.imageSrc = require("@/assets/Diagrammes/F2_Eau/F2_Eau.png");
+          } else if (
+            response.data[0] == "INACTIVE" &&
+            response.data[1] == "CLEANING"
+          ) {
+            this.imageSrc = require("@/assets/Diagrammes/F2_Net/F2_Net.png");
+          }
+        });
+
+      // Then get pressure and flow data
+      this.axios
+        .get(this.$store.state.serverIP + "/current-data")
+        .then(response => {
+          this.debit_amont = response.data[0];
+          this.pression_amont = response.data[1];
+          this.pression_aval = response.data[2];
+        });
+    }
+  },
+  created() {
+    setInterval(this.update, 5000);
   }
 };
 </script>
@@ -37,7 +97,7 @@ export default {
 
 .debit-amont {
   position: relative;
-  top: -212px;
+  top: -211px;
   left: -44%;
   margin: 0;
   font-family: Monaco, monospace !important;
@@ -50,7 +110,7 @@ export default {
 
 .pression-amont {
   position: relative;
-  top: -136px;
+  top: -134px;
   left: -315px;
   margin: 0;
   font-family: Monaco, monospace !important;
@@ -62,7 +122,7 @@ export default {
 
 .pression-aval {
   position: relative;
-  top: -173px;
+  top: -171px;
   left: 319px;
   margin: 0;
   font-family: Monaco, monospace !important;
