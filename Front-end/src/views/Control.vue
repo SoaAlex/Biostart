@@ -46,12 +46,13 @@
           size="lg"
           name="buttons-2"
           class="center"
+          @click.native="toWatch()"
         ></b-form-checkbox-group>
       </b-form-group>
 
       <hr style="padding: 0;" />
-      <b-button variant="danger" style="text-align: right" size="lg"
-        >Reboot system</b-button
+      <b-button disabled variant="danger" style="text-align: right" size="lg"
+        >Reboot system (WIP)</b-button
       >
     </div>
   </div>
@@ -62,19 +63,27 @@ export default {
   name: "Control",
   data() {
     return {
-      selected_F1: "F1_Water",
+      selected_F1: "WATER",
       options_F1: [
-        { value: "F1_Water", text: "Water" },
-        { value: "F1_Clean", text: "Cleaning solution" },
-        { value: "F1_None", text: "None" }
+        { value: "WATER", text: "Water" },
+        { value: "CLEANING", text: "Cleaning solution" },
+        { value: "INACTIVE", text: "None" }
       ],
-      selected_F2: "F2_Clean",
+      selected_F2: "WATER",
       options_F2: [
-        { value: "F2_Water", text: "Water" },
-        { value: "F2_Clean", text: "Cleaning solution" },
-        { value: "F2_None", text: "None" }
+        { value: "WATER", text: "Water" },
+        { value: "CLEANING", text: "Cleaning solution" },
+        { value: "INACTIVE", text: "None" }
       ]
     };
+  },
+  methods: {
+    updateState() {
+      this.axios.post(this.$store.state.serverIP + "/set-state", [
+        this.selected_F1,
+        this.selected_F2
+      ]);
+    }
   }
 };
 </script>

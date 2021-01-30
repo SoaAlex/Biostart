@@ -31,13 +31,6 @@ export default {
     return {
       dataChart: [[""], [0], [0]]
     };
-  },
-  methods: {
-    update: function() {
-      this.axios
-        .get(this.$store.state.serverIP + "/data-pressure")
-        .then(response => (this.dataChart = response.data));
-    }
   }
 };
 </script>

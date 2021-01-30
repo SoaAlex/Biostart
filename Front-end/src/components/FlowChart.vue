@@ -22,7 +22,7 @@ export default {
   methods: {
     update: function() {
       this.axios
-        .get(this.$store.state.serverIP + "/data-pressure")
+        .get(this.$store.state.serverIP + "/data-flow")
         .then(response => {
           this.datacollection = {
             labels: response.data[1],
