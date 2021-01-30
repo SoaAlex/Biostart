@@ -18,19 +18,31 @@ con.connect(function(err) {
 
 
 module.exports = {
-  filter: {
+  //pour des futurs updates
+  /*filters: {
     create: async (user) => {
     },
     getAll: () => {
-      return new Promise((resolve,reject) => {
-        con.query("SELECT * FROM Data LIMIT 10;", function (err, result,fields) {
-            if (err) throw err;
-            result = JSON.parse(JSON.stringify(result))
-            resolve(result)
-          });
-        });
     },
     list: async () => {
+    },
+    update: async(id, user) => {
+    },
+    delete: async (id) => {
+    },
+  },*/
+  cartbridges: {
+    /*create: async (user) => {
+      return execQuery("SELECT * FROM cartridge WHERE cartridge="+cartbridgeId+";")
+    },*/
+    get: (cartbridgeId) => {
+      return execQuery("SELECT * FROM cartridge WHERE cartridge="+cartbridgeId+";")
+    },
+    getListState: () => {
+      return execQuery("SELECT cartridge_id,state FROM cartridge;")
+    },
+    list: async () => {
+      return execQuery("SELECT * FROM cartridge;")
     },
     update: async(id, user) => {
     },
@@ -40,18 +52,24 @@ module.exports = {
   data: {
     create: async (user) => {
     },
-    get: async (id) => {
+    get: async (datId) => {
+      return execQuery("SELECT * FROM data;")
     },
-    list: async () => {
+    listUtilData: async (field,limit) => {
+      return execQuery("SELECT "+field+" FROM data LIMIT "+limit+";")
     },
     update: async(id, user) => {
     },
     delete: async (id) => {
     },
   },
-  admin: {
-    clear: async () => {
-      await db.clear()
-    }
-  },
 }
+
+const execQuery = (query)=>{
+  return new Promise((resolve,reject) => {
+    con.query(query, function (err, result,fields) {
+        if (err) throw err;
+        resolve(JSON.parse(JSON.stringify(result)))
+      });
+    });
+} 
