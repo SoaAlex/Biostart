@@ -83,7 +83,19 @@ export default {
         this.selected_F1,
         this.selected_F2
       ]);
+    },
+    getState() {
+      this.axios
+        .get(this.$store.state.serverIP + "/filter-state")
+        .then(response => {
+          this.selected_F1 = response.data[0];
+          this.selected_F2 = response.data[1];
+        });
     }
+  },
+  created() {
+    this.getState();
+    setInterval(this.update, this.$store.state.UPDATE_DELAY); // On rafraichit le graphe toutes les 5 secondes
   }
 };
 </script>
