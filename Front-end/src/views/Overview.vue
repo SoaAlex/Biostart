@@ -63,6 +63,11 @@ export default {
             response.data[1] == "CLEANING"
           ) {
             this.imageSrc = require("@/assets/Diagrammes/F2_Net/F2_Net.png");
+          } else if (
+            response.data[0] == "INACTIVE" &&
+            response.data[1] == "INACTIVE"
+          ) {
+            this.imageSrc = require("@/assets/Diagrammes/F1_F2/F1_F2.png");
           }
         });
 

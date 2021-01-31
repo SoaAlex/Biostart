@@ -32,9 +32,10 @@ module.exports = {
     },
   },*/
   cartbridges: {
-    /*create: async (user) => {
-      return execQuery("SELECT * FROM cartridge WHERE cartridge="+cartbridgeId+";")
-    },*/
+    create: async (data) => {
+      timestamp = Math.round(new Date().getTime()/1000)
+      return execQuery("INSERT INTO `data` (timestamp,cartridge_id,volume,pressure_c1,pressure_c2) VALUES ('"+timestamp+"','"+data.cartridge_id+"','"+data.volume+"','"+data.pressure_c1+"','"+data.pressure_c2+"');")
+    },
     get: (cartbridgeId) => {
       return execQuery("SELECT * FROM cartridge WHERE cartridge="+cartbridgeId+";")
     },
@@ -52,11 +53,17 @@ module.exports = {
   data: {
     create: async (user) => {
     },
-    get: async (datId) => {
-      return execQuery("SELECT * FROM data;")
+    get: async (dataId) => {
+      if (dataId)
+        return execQuery("SELECT * FROM data WHERE data_id = "+dataId+";")
+      else
+        return execQuery("SELECT * FROM data WHERE timestamp=(SELECT max(timestamp) FROM data)")
+    },
+    getLastValue: async (dataId) => {
+      return execQuery("SELECT * FROM data WHERE timestamp=(SELECT max(timestamp) FROM data) AND cartridge_id="+dataId+";")
     },
     listUtilData: async (field,limit) => {
-      return execQuery("SELECT "+field+" FROM data LIMIT "+limit+";")
+      return execQuery("SELECT "+field+" FROM data ORDER BY timestamp DESC LIMIT "+limit+";")
     },
     update: async(id, user) => {
     },
