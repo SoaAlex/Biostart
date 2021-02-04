@@ -6,6 +6,7 @@ const db = require("./db");
 const express = require("express");
 const cors = require("cors");
 const app = express();
+const port = 3001;
 ///Add necessary element in app
 app.use(require("body-parser").json());
 //app.use(cors())
@@ -227,5 +228,8 @@ app.get('/data-flow', (req, res) => {
   })
 })
 
-module.exports = app;
+app.listen(port, () => {
+  console.log(`Example app listening at http://localhost:${port}`)
+})
 
+module.exports = app;
