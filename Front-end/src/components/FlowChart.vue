@@ -13,7 +13,18 @@ export default {
   },
   data() {
     return {
-      datacollection: null
+      datacollection: {
+        labels: [""],
+        datasets: [
+          {
+            label: "Upstream Flow (L³)",
+            backgroundColor: "transparent",
+            borderColor: "rgba(1, 116, 188, 0.50)",
+            pointBackgroundColor: "rgba(171, 71, 188, 1)",
+            data: [""]
+          }
+        ]
+      }
     };
   },
   mounted() {
@@ -28,7 +39,7 @@ export default {
             labels: response.data[1],
             datasets: [
               {
-                label: "Débit Amont (L³)",
+                label: "Upstream Flow (L³)",
                 backgroundColor: "transparent",
                 borderColor: "rgba(1, 116, 188, 0.50)",
                 pointBackgroundColor: "rgba(171, 71, 188, 1)",

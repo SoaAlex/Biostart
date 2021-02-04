@@ -28,14 +28,14 @@ export default {
             labels: response.data[2],
             datasets: [
               {
-                label: "Pression Amont (mbar)",
+                label: "Upstream Pressure (mbar)",
                 backgroundColor: "transparent",
                 borderColor: "rgba(1, 116, 188, 0.50)",
                 pointBackgroundColor: "rgba(171, 71, 188, 1)",
                 data: response.data[0]
               },
               {
-                label: "Pression Aval (mbar)",
+                label: "Downstream Pressure (mbar)",
                 backgroundColor: "transparent",
                 borderColor: "rgba(116, 0, 0, 0.50)",
                 pointBackgroundColor: "rgba(171, 71, 188, 1)",

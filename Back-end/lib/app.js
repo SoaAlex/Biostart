@@ -183,6 +183,16 @@ app.get('/filter-state', (req, res) => {
   })
 })
 
+app.get('/current-data', (req, res) => {
+  db.data.getLastValue(1)
+  .then((lastValue)=>{
+    res.send({0:12,1:lastValue[4],2:lastValue[5]})
+  })
+  .catch((error)=>{
+    res.status(404).send("Error");
+  })
+});
+
 app.get('/data-pressure', (req, res) => { // [0] = Pression Amont | [1] = Pression aval | [2] = timestamp du prélèvement (date ou heure à réfléchir)
   db.data.listUtilData("pressure_c1,pressure_c2,timestamp",30)
   .then((result)=>{

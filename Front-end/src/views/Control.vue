@@ -79,11 +79,37 @@ export default {
     };
   },
   methods: {
-    updateState() {
-      this.axios.post(this.$store.state.serverIP + "/set-state", [
-        this.selected_F1,
-        this.selected_F2
-      ]);
+    sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    },
+    async updateState() {
+      await this.sleep(2000);
+      if (this.selected_F1 === "WATER") {
+        this.axios.put(this.$store.state.serverIP + "/cartridges/1", {
+          state: 1
+        });
+      } else if (this.selected_F1 === "CLEANING") {
+        this.axios.put(this.$store.state.serverIP + "/cartridges/1", {
+          state: 2
+        });
+      } else if (this.selected_F1 === "INACTIVE") {
+        this.axios.put(this.$store.state.serverIP + "/cartridges/1", {
+          state: 0
+        });
+      }
+      if (this.selected_F2 === "WATER") {
+        this.axios.put(this.$store.state.serverIP + "/cartridges/2", {
+          state: 1
+        });
+      } else if (this.selected_F2 === "CLEANING") {
+        this.axios.put(this.$store.state.serverIP + "/cartridges/2", {
+          state: 2
+        });
+      } else if (this.selected_F2 === "INACTIVE") {
+        this.axios.put(this.$store.state.serverIP + "/cartridges/2", {
+          state: 0
+        });
+      }
     },
     getState() {
       this.axios
