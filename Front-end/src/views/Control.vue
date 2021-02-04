@@ -52,9 +52,9 @@
       </b-form-group>
 
       <hr style="padding: 0;" />
-      <b-button disabled variant="danger" style="text-align: right" size="lg"
-        >Reboot system (WIP)</b-button
-      >
+      <!-- <b-button disabled variant="danger" style="text-align: right" size="lg"
+        >Reboot system (WIP)</b-button 
+      > -->
     </div>
   </div>
 </template>
@@ -96,7 +96,7 @@ export default {
   },
   created() {
     this.getState();
-    setInterval(this.update, this.$store.state.UPDATE_DELAY); // On rafraichit le graphe toutes les 5 secondes
+    setInterval(this.getState, this.$store.state.UPDATE_DELAY); // On rafraichit le graphe toutes les 5 secondes
   }
 };
 </script>
