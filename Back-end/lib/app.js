@@ -17,17 +17,12 @@ app.get("/", (req, res) => {
   res.send(["<h1>Biostart Back-end</h1>"].join(""));
 });
 
-/**************  cartbridges  ****************/
+/**************  cartridges  ****************/
 
-app.post("/cartbridges", async (req, res) => {
-
-});
-
-//get cartbridges thanks to his id
-app.get("/cartbridges", async(req, res) => {
-  db.cartbridges.get()
+//Create
+app.post("/cartridges", async (req, res) => {
+  db.cartridge.create(req.body)
   .then((result)=>{
-    console.log(result);
     res.status(201).send(result);
   })
   .catch((error)=>{
@@ -35,21 +30,80 @@ app.get("/cartbridges", async(req, res) => {
   })
 });
 
-//delete a specific user
-app.delete("/filters/:id", async (req, res) => {
+//get cartridges thanks to his id
+app.get("/cartridges", async(req, res) => {
+  db.cartridge.getList()
+  .then((result)=>{
+    res.status(200).send(result);
+  })
+  .catch((error)=>{
+    res.status(404).send("Error");
+  })
+});
 
+//get cartridges thanks to his id
+app.get("/cartridges/:id", async(req, res) => {
+  db.cartridge.get(req.params.id)
+  .then((result)=>{
+    res.status(200).send(result);
+  })
+  .catch((error)=>{
+    res.status(404).send("Error");
+  })
+});
+
+//modified a specific cartridge
+app.put("/cartridges/:id", async (req, res) => {
+  if (!req.body) throw new Error("request body is empty");
+  if (!req.params.id) throw new Error("an id is needed");
+  db.cartridge.update(req.params.id,req.body)
+  .then(()=>{
+    res.status(200).send("Modified");
+  })
+  .catch((error)=>{
+    res.status(404).send("Error");
+  })
+});
+
+//delete a specific cartridge
+app.delete("/cartridges/:id", async (req, res) => {
+  if (!req.params.id) throw new Error("an id is needed");
+  db.cartridge.delete(req.params.id)
+  .then((result)=>{
+    res.status(200).send(result);
+  })
+  .catch((error)=>{
+    res.status(404).send("Error");
+  })
 });
 
 /**************  data  ****************/
 
-app.post("/data", async (req, res) => {
-  db.cartbridges.create(req.body)
-  res.send("OK")
+app.post("/data/:id", async (req, res) => {
+  db.data.create(req.params.id,req.body)
+  .then(()=>{
+    db.data.getLastValue(1)
+    .then((lastValue1)=>{
+      db.data.getLastValue(2)
+      .then((lastValue2)=>{
+        db.cartridge.getListVolume()
+        .then((maxVolume)=>{
+          RemainingFilter1= maxVolume[0].max_volume - (lastValue1.length>0?lastValue1[0].volume:0 )
+          RemainingFilter2= 0//maxVolume[1].max_volume - lastValue2.length>0?lastValue2[0].volume:0
+          console.log(RemainingFilter1)
+          res.send({0:RemainingFilter1>=0?1:0,1:RemainingFilter2>=0?1:0})
+        })
+      })
+    })
+  })
+  .catch((error)=>{
+    res.status(404).send("Error");
+  })
 });
 
 //get data thanks to his id
 app.get("/data", async(req, res) => {
-  db.cartbridges.get()
+  db.data.get()
   .then((result)=>{
     console.log(result);
     res.status(201).send(result);
@@ -68,9 +122,11 @@ app.delete("/filters/:id", async (req, res) => {
 app.get('/total-filtered', (req, res) => {
   db.data.getLastValue(1)
   .then((lastValue1)=>{
-    db.data.getLastValue(1)
+    db.data.getLastValue(2)
     .then((lastValue2)=>{
-      res.send([lastValue1[0].volume,lastValue2[0].volume])
+      volumeFilter1=lastValue1.length?lastValue1[0].volume:0
+      volumeFilter2=lastValue2.length?lastValue2[0].volume:0
+      res.send([volumeFilter1,volumeFilter2])
     })
   })
   .catch((error)=>{
@@ -79,11 +135,25 @@ app.get('/total-filtered', (req, res) => {
 })
 
 app.get('/remaining-filter', (req, res) => {
-res.send(["19254", "12"])
+  db.data.getLastValue(1)
+  .then((lastValue1)=>{
+    db.data.getLastValue(2)
+    .then((lastValue2)=>{
+      db.cartridge.getListVolume()
+      .then((maxVolume)=>{
+        volumeFilter1=lastValue1.length?lastValue1[0].volume:0
+        volumeFilter2=lastValue2.length?lastValue2[0].volume:0
+        res.send([maxVolume[0].max_volume-volumeFilter1,maxVolume[1].max_volume-volumeFilter2])
+      })
+    })
+  })
+  .catch((error)=>{
+    res.status(404).send(error);
+  })
 })
 
 app.get('/filter-state', (req, res) => {
-  db.cartbridges.getListState()
+  db.cartridge.getListState()
   .then((result)=>{
     resultArray = []
     result.forEach(element => {

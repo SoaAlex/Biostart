@@ -18,40 +18,40 @@ con.connect(function(err) {
 
 
 module.exports = {
-  //pour des futurs updates
-  /*filters: {
-    create: async (user) => {
-    },
-    getAll: () => {
-    },
-    list: async () => {
-    },
-    update: async(id, user) => {
-    },
-    delete: async (id) => {
-    },
-  },*/
-  cartbridges: {
+  cartridge: {
     create: async (data) => {
-      timestamp = Math.round(new Date().getTime()/1000)
-      return execQuery("INSERT INTO `data` (timestamp,cartridge_id,volume,pressure_c1,pressure_c2) VALUES ('"+timestamp+"','"+data.cartridge_id+"','"+data.volume+"','"+data.pressure_c1+"','"+data.pressure_c2+"');")
+      return execQuery("INSERT INTO `cartridge` (filter_id,state,max_volume) VALUES ('"+data.filterId+"','"+data.state+"','"+data.max_volume+"');")
     },
-    get: (cartbridgeId) => {
-      return execQuery("SELECT * FROM cartridge WHERE cartridge="+cartbridgeId+";")
+    get: (cartridgeId) => {
+      return execQuery("SELECT * FROM cartridge WHERE cartridge_id="+cartridgeId+";")
+    },
+    getList: () => {
+      return execQuery("SELECT * FROM cartridge;")
     },
     getListState: () => {
       return execQuery("SELECT cartridge_id,state FROM cartridge;")
     },
-    list: async () => {
-      return execQuery("SELECT * FROM cartridge;")
+    getListVolume: () => {
+      return execQuery("SELECT cartridge_id,max_volume FROM cartridge;")
     },
-    update: async(id, user) => {
+    update: async(id, new_data) => {
+      execQuery("SELECT * FROM cartridge WHERE cartridge_id="+id+";")
+      .then((old_data)=>{
+          data = merge(old_data[0],new_data)
+          execQuery("UPDATE cartridge SET filter_id = '"+data.filter_id+"', state = '"+data.state+"', max_volume = '"+data.max_volume+"' WHERE cartridge_id="+id+";")
+      })
     },
     delete: async (id) => {
+      return execQuery("DELETE FROM cartridge WHERE cartridge_id="+id+";")
     },
   },
   data: {
-    create: async (user) => {
+    create: async (id,data) => {
+      timestamp = Math.round(new Date().getTime()/1000)
+      execQuery("SELECT * FROM data WHERE timestamp=(SELECT max(timestamp) FROM data) AND cartridge_id="+id+";")
+      .then((actualVolume)=>{ 
+          execQuery("INSERT INTO `data` (timestamp,cartridge_id,volume,pressure_c1,pressure_c2) VALUES ('"+timestamp+"','"+id+"','"+(actualVolume[0].volume+data.volume)+"','"+data.pressure_c1+"','"+data.pressure_c2+"');")
+      })
     },
     get: async (dataId) => {
       if (dataId)
