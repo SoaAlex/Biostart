@@ -29,7 +29,6 @@
 <script>
 export default {
   name: "Navbar",
-  el: "#Navbar",
   data: function() {
     return {
       date: "",
