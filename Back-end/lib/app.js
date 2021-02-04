@@ -80,22 +80,16 @@ app.delete("/cartridges/:id", async (req, res) => {
 
 /**************  data  ****************/
 
-app.post("/data/:id", async (req, res) => {
-  db.cartridge.updateVolume(req.params.id,req.body.volume)
-  db.data.create(req.params.id,req.body)
+app.post("/data", async (req, res) => {
+  db.cartridge.updateVolume(req.body.volume)
+  db.data.create(req.body)
   .then(()=>{
-    db.data.getLastValue(1)
-    .then((lastValue1)=>{
-      db.data.getLastValue(2)
-      .then((lastValue2)=>{
-        db.cartridge.getListVolume()
-        .then((maxVolume)=>{
-          RemainingFilter1= maxVolume[0].max_volume - (lastValue1.length>0?lastValue1[0].volume:0 )
-          RemainingFilter2= 0//maxVolume[1].max_volume - lastValue2.length>0?lastValue2[0].volume:0
-          console.log(RemainingFilter1)
-          res.send({0:RemainingFilter1>=0?1:0,1:RemainingFilter2>=0?1:0})
-        })
-      })
+    db.cartridge.getListVolume()
+    .then((filterVolume)=>{
+      console.log(filterVolume)
+      RemainingFilter1 = filterVolume[0].max_volume - filterVolume[0].actual_volume
+      RemainingFilter2 = filterVolume[1].max_volume - filterVolume[1].actual_volume
+      res.send({0:RemainingFilter1>=0?1:0,1:RemainingFilter2>=0?1:0})
     })
   })
   .catch((error)=>{
@@ -121,54 +115,36 @@ app.delete("/filters/:id", async (req, res) => {
 });
 
 /******************* Front utileroute ************************/
+
+//get the total volume filtered
 app.get('/total-filtered', (req, res) => {
-  db.data.getLastValue(1)
-  .then((lastValue1)=>{
-    db.data.getLastValue(2)
-    .then((lastValue2)=>{
-      volumeFilter1=lastValue1.length?lastValue1[0].volume:0
-      volumeFilter2=lastValue2.length?lastValue2[0].volume:0
-      res.send([volumeFilter1,volumeFilter2])
-    })
+  db.cartridge.getListVolume()
+  .then((listVolume)=>{
+    volumeFilter1=listVolume[0].actual_volume
+    volumeFilter2=listVolume[1].actual_volume
+    res.send([volumeFilter1,volumeFilter2])    
   })
   .catch((error)=>{
     res.status(404).send(error);
   })
 })
 
-app.get('/current-data', (req, res) => {
-  db.data.getLastValue(1)
-  .then((lastValue1)=>{
-    db.data.getLastValue(2)
-    .then((lastValue2)=>{
-      volumeFilter1=lastValue1.length?lastValue1[0].volume:0
-      volumeFilter2=lastValue2.length?lastValue2[0].volume:0
-      res.send([volumeFilter1,volumeFilter2])
-    })
-  })
-  .catch((error)=>{
-    res.status(404).send(error);
-  })
-})
-
+//get the remaining volume filtered
 app.get('/remaining-filter', (req, res) => {
-  db.data.getLastValue(1)
-  .then((lastValue1)=>{
-    db.data.getLastValue(2)
-    .then((lastValue2)=>{
-      db.cartridge.getListVolume()
-      .then((maxVolume)=>{
-        volumeFilter1=lastValue1.length?lastValue1[0].volume:0
-        volumeFilter2=lastValue2.length?lastValue2[0].volume:0
-        res.send([maxVolume[0].max_volume-volumeFilter1,maxVolume[1].max_volume-volumeFilter2])
-      })
-    })
+  db.cartridge.getListVolume()
+  .then((listVolume)=>{
+    volumeFilter1 = listVolume[0].actual_volume
+    maxVolume1 = listVolume[0].max_volume
+    volumeFilter2=listVolume[1].actual_volume
+    maxVolume2 = listVolume[1].max_volume
+    res.send([maxVolume1-volumeFilter1,maxVolume2-volumeFilter2]) 
   })
   .catch((error)=>{
     res.status(404).send(error);
   })
 })
 
+//get the cartridge state
 app.get('/filter-state', (req, res) => {
   db.cartridge.getListState()
   .then((result)=>{
@@ -184,9 +160,9 @@ app.get('/filter-state', (req, res) => {
 })
 
 app.get('/current-data', (req, res) => {
-  db.data.getLastValue(1)
+  db.data.getLastValue()
   .then((lastValue)=>{
-    res.send({0:12,1:lastValue[4],2:lastValue[5]})
+    res.send({0:lastValue[0].flow,1:lastValue[0].pressure_c1,2:lastValue[0].pressure_c2})
   })
   .catch((error)=>{
     res.status(404).send("Error");

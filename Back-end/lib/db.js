@@ -32,7 +32,7 @@ module.exports = {
       return execQuery("SELECT cartridge_id,state FROM cartridge;")
     },
     getListVolume: () => {
-      return execQuery("SELECT cartridge_id,max_volume FROM cartridge;")
+      return execQuery("SELECT cartridge_id,actual_volume,max_volume FROM cartridge;")
     },
     update: async(id, new_data) => {
       execQuery("SELECT * FROM cartridge WHERE cartridge_id="+id+";")
@@ -41,11 +41,23 @@ module.exports = {
           execQuery("UPDATE cartridge SET filter_id = '"+data.filter_id+"', state = '"+data.state+"', max_volume = '"+data.max_volume+"' WHERE cartridge_id="+id+";")
       })
     },
-    updateVolume: async(id,new_data) => {
-      execQuery("SELECT * FROM cartridge WHERE cartridge_id="+id+";")
+    updateVolume: async(new_data) => {
+      execQuery("SELECT * FROM cartridge;")
       .then((old_data)=>{
-          actual_volume = new_data+old_data[0].actual_volume
-          execQuery("UPDATE cartridge SET actual_volume = '"+actual_volume+"' WHERE cartridge_id="+id+";")
+        volumeF1 = 0,volumeF2=0
+        if(old_data[0].state === 1 && old_data[1].state === 1){
+          volumeF1=new_data/2
+          volumeF2=new_data/2
+        } else if (old_data[0].state === 1 && old_data[1].state === 0){
+          volumeF1=new_data
+        } else if (old_data[0].state === 0 && old_data[1].state === 1){
+          volumeF1=new_data
+        }
+          actual_volumeF1 = volumeF1+old_data[0].actual_volume
+          actual_volumeF2 = volumeF2+old_data[1].actual_volume
+
+          execQuery("UPDATE cartridge SET actual_volume = '"+actual_volumeF1+"' WHERE cartridge_id="+1+";")
+          execQuery("UPDATE cartridge SET actual_volume = '"+actual_volumeF2+"' WHERE cartridge_id="+2+";")
       })
     },
     delete: async (id) => {
@@ -53,9 +65,9 @@ module.exports = {
     },
   },
   data: {
-    create: async (id,data) => {
+    create: async (data) => {
       timestamp = Math.round(new Date().getTime()/1000)
-      execQuery("INSERT INTO `data` (timestamp,filter_id,pressure_c1,pressure_c2) VALUES ('"+timestamp+"','"+0+"','"+data.pressure_c1+"','"+data.pressure_c2+"');")
+      execQuery("INSERT INTO `data` (timestamp,filter_id,flow,pressure_c1,pressure_c2) VALUES ('"+timestamp+"','"+0+"','"+data.flow+"','"+data.pressure_c1+"','"+data.pressure_c2+"');")
     },
     get: async (timestamp) => {
       if (timestamp)
