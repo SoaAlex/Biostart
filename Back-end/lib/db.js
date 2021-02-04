@@ -41,6 +41,13 @@ module.exports = {
           execQuery("UPDATE cartridge SET filter_id = '"+data.filter_id+"', state = '"+data.state+"', max_volume = '"+data.max_volume+"' WHERE cartridge_id="+id+";")
       })
     },
+    updateVolume: async(id,new_data) => {
+      execQuery("SELECT * FROM cartridge WHERE cartridge_id="+id+";")
+      .then((old_data)=>{
+          actual_volume = new_data+old_data[0].actual_volume
+          execQuery("UPDATE cartridge SET actual_volume = '"+actual_volume+"' WHERE cartridge_id="+id+";")
+      })
+    },
     delete: async (id) => {
       return execQuery("DELETE FROM cartridge WHERE cartridge_id="+id+";")
     },
@@ -48,10 +55,7 @@ module.exports = {
   data: {
     create: async (id,data) => {
       timestamp = Math.round(new Date().getTime()/1000)
-      execQuery("SELECT * FROM data WHERE timestamp=(SELECT max(timestamp) FROM data);")
-      .then((actualVolume)=>{ 
-          execQuery("INSERT INTO `data` (timestamp,filter_id,volume,pressure_c1,pressure_c2) VALUES ('"+timestamp+"','"+0+"','"+(actualVolume[0].volume+data.volume)+"','"+data.pressure_c1+"','"+data.pressure_c2+"');")
-      })
+      execQuery("INSERT INTO `data` (timestamp,filter_id,pressure_c1,pressure_c2) VALUES ('"+timestamp+"','"+0+"','"+data.pressure_c1+"','"+data.pressure_c2+"');")
     },
     get: async (timestamp) => {
       if (timestamp)

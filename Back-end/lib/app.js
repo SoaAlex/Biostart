@@ -81,6 +81,7 @@ app.delete("/cartridges/:id", async (req, res) => {
 /**************  data  ****************/
 
 app.post("/data/:id", async (req, res) => {
+  db.cartridge.updateVolume(req.params.id,req.body.volume)
   db.data.create(req.params.id,req.body)
   .then(()=>{
     db.data.getLastValue(1)
