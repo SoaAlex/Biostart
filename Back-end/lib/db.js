@@ -48,26 +48,27 @@ module.exports = {
   data: {
     create: async (id,data) => {
       timestamp = Math.round(new Date().getTime()/1000)
-      execQuery("SELECT * FROM data WHERE timestamp=(SELECT max(timestamp) FROM data) AND cartridge_id="+id+";")
+      execQuery("SELECT * FROM data WHERE timestamp=(SELECT max(timestamp) FROM data);")
       .then((actualVolume)=>{ 
-          execQuery("INSERT INTO `data` (timestamp,cartridge_id,volume,pressure_c1,pressure_c2) VALUES ('"+timestamp+"','"+id+"','"+(actualVolume[0].volume+data.volume)+"','"+data.pressure_c1+"','"+data.pressure_c2+"');")
+          execQuery("INSERT INTO `data` (timestamp,filter_id,volume,pressure_c1,pressure_c2) VALUES ('"+timestamp+"','"+0+"','"+(actualVolume[0].volume+data.volume)+"','"+data.pressure_c1+"','"+data.pressure_c2+"');")
       })
     },
-    get: async (dataId) => {
-      if (dataId)
-        return execQuery("SELECT * FROM data WHERE data_id = "+dataId+";")
+    get: async (timestamp) => {
+      if (timestamp)
+        return execQuery("SELECT * FROM data WHERE data_id = "+timestamp+";")
       else
         return execQuery("SELECT * FROM data WHERE timestamp=(SELECT max(timestamp) FROM data)")
     },
-    getLastValue: async (dataId) => {
-      return execQuery("SELECT * FROM data WHERE timestamp=(SELECT max(timestamp) FROM data) AND cartridge_id="+dataId+";")
+    getLastValue: async () => {
+      return execQuery("SELECT * FROM data WHERE timestamp=(SELECT max(timestamp) FROM data);")
     },
     listUtilData: async (field,limit) => {
       return execQuery("SELECT "+field+" FROM data ORDER BY timestamp DESC LIMIT "+limit+";")
     },
     update: async(id, user) => {
     },
-    delete: async (id) => {
+    delete: async (timestamp) => {
+      return execQuery("DELETE FROM data WHERE timestamp="+timestamp+";")
     },
   },
 }
