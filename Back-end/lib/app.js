@@ -134,6 +134,21 @@ app.get('/total-filtered', (req, res) => {
   })
 })
 
+app.get('/current-data', (req, res) => {
+  db.data.getLastValue(1)
+  .then((lastValue1)=>{
+    db.data.getLastValue(2)
+    .then((lastValue2)=>{
+      volumeFilter1=lastValue1.length?lastValue1[0].volume:0
+      volumeFilter2=lastValue2.length?lastValue2[0].volume:0
+      res.send([volumeFilter1,volumeFilter2])
+    })
+  })
+  .catch((error)=>{
+    res.status(404).send(error);
+  })
+})
+
 app.get('/remaining-filter', (req, res) => {
   db.data.getLastValue(1)
   .then((lastValue1)=>{
