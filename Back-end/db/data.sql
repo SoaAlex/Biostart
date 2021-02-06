@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS `cartridge` (
 CREATE TABLE IF NOT EXISTS `data` (
   `timestamp` int(16) NOT NULL,
   `filter_id` int(16) NOT NULL,
-  `volume` float(16) NOT NULL,
+  `flow` int(16) NOT NULL,
   `pressure_c1` float(16) NOT NULL,
   `pressure_c2` float(16) NOT NULL,
    PRIMARY KEY(timestamp)
