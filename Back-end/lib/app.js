@@ -216,4 +216,8 @@ app.get('/data-flow', (req, res) => {
 })
 
 
+app.listen(3001, () => {
+  console.log(`Server is waiting for you at http://localhost:3001`)
+})
+
 module.exports = app;
