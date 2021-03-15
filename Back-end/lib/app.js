@@ -89,7 +89,7 @@ app.post("/data", async (req, res) => {
       console.log(filterVolume)
       RemainingFilter1 = filterVolume[0].max_volume - filterVolume[0].actual_volume
       RemainingFilter2 = filterVolume[1].max_volume - filterVolume[1].actual_volume
-      res.send({0:RemainingFilter1>=0?1:0,1:RemainingFilter2>=0?1:0})
+      res.json({0:RemainingFilter1>=0?1:0,1:RemainingFilter2>=0?1:0})
     })
   })
   .catch((error)=>{

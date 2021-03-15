@@ -66,6 +66,7 @@ module.exports = {
   },
   data: {
     create: async (data) => {
+      print(data)
       if (!data)
         throw new Error("no data")
       if (!data.flow)
