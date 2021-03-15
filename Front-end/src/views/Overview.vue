@@ -84,6 +84,9 @@ export default {
   created() {
     this.update();
     setInterval(this.update, this.$store.state.UPDATE_DELAY);
+  },
+  mounted() {
+    this.update();
   }
 };
 </script>
