@@ -92,8 +92,9 @@ module.exports = {
 const execQuery = (query)=>{
   return new Promise((resolve,reject) => {
     con.query(query, function (err, result,fields) {
-        if (err) throw err;
-        resolve(JSON.parse(JSON.stringify(result)))
+        if (err) reject(err)
+        else 
+          resolve(JSON.parse(JSON.stringify(result)))
       });
     });
 } 
