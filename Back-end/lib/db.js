@@ -66,13 +66,19 @@ module.exports = {
   },
   data: {
     create: async (data) => {
-      print(data)
-      if (!data)
+      console.log(data)
+      console.log(data.volume)
+      if (!data){
+        console.log("No data")
         throw new Error("no data")
-      if (!data.flow)
+      }
+      if (typeof(data.flow) == "undefined")
+      {
+        console.log("No FLOW")
         throw new Error("no flow")
+      }
       timestamp = Math.round(new Date().getTime()/1000)
-      execQuery("INSERT INTO `data` (timestamp,filter_id,flow,pressure_c1,pressure_c2) VALUES ('"+timestamp+"','"+0+"','"+data.flow+"','"+data.pressure_c1+"','"+data.pressure_c2+"');")
+      execQuery("INSERT INTO `data` (timestamp,filter_id,flow,pressure_c1,pressure_c2) VALUES ('"+timestamp+"','"+0+"','"+data.volume+"','"+data.pressure_c1+"','"+data.pressure_c2+"');")
     },
     get: async (timestamp) => {
       if (timestamp)

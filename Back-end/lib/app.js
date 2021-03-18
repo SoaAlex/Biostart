@@ -80,20 +80,27 @@ app.delete("/cartridges/:id", async (req, res) => {
 
 /**************  data  ****************/
 
-app.post("/data", async (req, res) => {
+app.post("/data", async (req, res) => {  
+  if(req.body=="undefined") throw new Error("No data")
+  if(req.body.volume=="undefined") throw new Error("No volume")
   db.cartridge.updateVolume(req.body.volume)
   db.data.create(req.body)
   .then(()=>{
-    db.cartridge.getListVolume()
+    /*db.cartridge.getListVolume()
     .then((filterVolume)=>{
       console.log(filterVolume)
       RemainingFilter1 = filterVolume[0].max_volume - filterVolume[0].actual_volume
       RemainingFilter2 = filterVolume[1].max_volume - filterVolume[1].actual_volume
       res.json({0:RemainingFilter1>=0?1:0,1:RemainingFilter2>=0?1:0})
-    })
-  })
+    })*/
+	db.cartridge.getList()
+    .then((filter)=>{
+      console.log(filter)
+      res.json({0:filter[0].state,1:filter[1].state})
+	})
+   })
   .catch((error)=>{
-    res.status(404).send("Error");
+    res.status(404).send("Error "+error);
   })
 });
 
@@ -194,21 +201,33 @@ app.get('/data-pressure', (req, res) => { // [0] = Pression Amont | [1] = Pressi
 })
 
 app.get('/data-flow', (req, res) => {
-  db.data.listUtilData("pressure_c1,timestamp",30)
+  db.data.listUtilData("flow,timestamp",30)
   .then((result)=>{
+
+    promArray = [];
+
     pressure_c1 = []
     time = []
+    console.log(result);
     result.forEach(element => {
-      pressure_c1.push(element.pressure_c1)
+      promArray.push(new Promise((resolve) => {
+        pressure_c1.push(element.flow)
 
-      var date = new Date(element.timestamp * 1000);
-      var hours = date.getHours();
-      var minutes = "0" + date.getMinutes();
-      var seconds = "0" + date.getSeconds();
-      var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
-      time.push(formattedTime)
+        var date = new Date(element.timestamp * 1000);
+        var hours = date.getHours();
+        var minutes = "0" + date.getMinutes();
+        var seconds = "0" + date.getSeconds();
+        var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+        time.push(formattedTime)
+        resolve();
+      }))
     });
-    res.status(201).send([pressure_c1.reverse(),time.reverse()]);
+    Promise.all(promArray).then(_ => {
+      console.log(pressure_c1);
+      res.status(201).send([pressure_c1.reverse(),time.reverse()]);
+
+    })
+    
   })
   .catch((error)=>{
     res.status(404).send("Error");
