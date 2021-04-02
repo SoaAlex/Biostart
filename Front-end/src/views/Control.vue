@@ -110,6 +110,7 @@ export default {
           state: 0
         });
       }
+      this.getState();
     },
     getState() {
       this.axios
@@ -122,7 +123,7 @@ export default {
   },
   created() {
     this.getState();
-    setInterval(this.getState, this.$store.state.UPDATE_DELAY); // On rafraichit le graphe toutes les 5 secondes
+    setInterval(this.getState, 8000); // On rafraichit le graphe toutes les 8 secondes
   }
 };
 </script>

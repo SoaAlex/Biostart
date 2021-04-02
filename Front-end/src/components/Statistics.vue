@@ -106,6 +106,9 @@ export default {
         this.backgroundColorF2 = "#000000";
       }
     }
+  },
+  mounted() {
+    this.update();
   }
 };
 </script>

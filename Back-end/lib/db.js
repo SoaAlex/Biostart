@@ -11,7 +11,7 @@ var con = mysql.createConnection({
   database: "biostart"
 });
 
-con.connect(function(err) {
+con.connect(function (err) {
   if (err) throw err;
   console.log("Connected!");
 });
@@ -20,10 +20,10 @@ con.connect(function(err) {
 module.exports = {
   cartridge: {
     create: async (data) => {
-      return execQuery("INSERT INTO `cartridge` (filter_id,state,max_volume) VALUES ('"+data.filterId+"','"+data.state+"','"+data.max_volume+"');")
+      return execQuery("INSERT INTO `cartridge` (filter_id,state,max_volume) VALUES ('" + data.filterId + "','" + data.state + "','" + data.max_volume + "');")
     },
     get: (cartridgeId) => {
-      return execQuery("SELECT * FROM cartridge WHERE cartridge_id="+cartridgeId+";")
+      return execQuery("SELECT * FROM cartridge WHERE cartridge_id=" + cartridgeId + ";")
     },
     getList: () => {
       return execQuery("SELECT * FROM cartridge;")
@@ -34,34 +34,40 @@ module.exports = {
     getListVolume: () => {
       return execQuery("SELECT cartridge_id,actual_volume,max_volume FROM cartridge;")
     },
-    update: async(id, new_data) => {
-      execQuery("SELECT * FROM cartridge WHERE cartridge_id="+id+";")
-      .then((old_data)=>{
-          data = merge(old_data[0],new_data)
-          execQuery("UPDATE cartridge SET filter_id = '"+data.filter_id+"', state = '"+data.state+"', max_volume = '"+data.max_volume+"' WHERE cartridge_id="+id+";")
-      })
+    update: async (id, new_data) => {
+      execQuery("SELECT * FROM cartridge WHERE cartridge_id=" + id + ";")
+        .then((old_data) => {
+          data = merge(old_data[0], new_data)
+          console.log(data.actual_volume)
+          execQuery("UPDATE cartridge SET filter_id = '" + data.filter_id + "', state = '" + data.state + "', actual_volume = '" + data.actual_volume +"', max_volume = '" + data.max_volume + "', cleaning_date = '" + data.cleaning_date +"' WHERE cartridge_id=" + id + ";")
+        })
     },
-    updateVolume: async(new_data) => {
-      execQuery("SELECT * FROM cartridge;")
-      .then((old_data)=>{
-        volumeF1 = 0,volumeF2=0
-        if(old_data[0].state === 1 && old_data[1].state === 1){
-          volumeF1=new_data/2
-          volumeF2=new_data/2
-        } else if (old_data[0].state === 1 && old_data[1].state === 0){
-          volumeF1=new_data
-        } else if (old_data[0].state === 0 && old_data[1].state === 1){
-          volumeF1=new_data
-        }
-          actual_volumeF1 = volumeF1+old_data[0].actual_volume
-          actual_volumeF2 = volumeF2+old_data[1].actual_volume
+    updateVolume: async (new_data) => {
+      return new Promise((resolve, reject) => {
+        execQuery("SELECT * FROM cartridge;")
+          .then((old_data) => {
+            volumeF1 = 0, volumeF2 = 0
+            if (old_data[0].state === 1 && old_data[1].state === 1) {
+              volumeF1 = new_data / 2
+              volumeF2 = new_data / 2
+            } else if (old_data[0].state === 1) {
+              volumeF1 = new_data
+            } else if (old_data[1].state === 1) {
+              volumeF2 = new_data
+            }
+            actual_volumeF1 = volumeF1 + old_data[0].actual_volume
+            actual_volumeF2 = volumeF2 + old_data[1].actual_volume
 
-          execQuery("UPDATE cartridge SET actual_volume = '"+actual_volumeF1+"' WHERE cartridge_id="+1+";")
-          execQuery("UPDATE cartridge SET actual_volume = '"+actual_volumeF2+"' WHERE cartridge_id="+2+";")
+            execQuery("UPDATE cartridge SET actual_volume = '" + actual_volumeF1 + "' WHERE cartridge_id=" + 1 + ";").then(() => {
+              execQuery("UPDATE cartridge SET actual_volume = '" + actual_volumeF2 + "' WHERE cartridge_id=" + 2 + ";").then(() => {
+                resolve({ volumeFilter1: actual_volumeF1, volumeFilter2: actual_volumeF2 })
+              })
+            })
+          })
       })
     },
     delete: async (id) => {
-      return execQuery("DELETE FROM cartridge WHERE cartridge_id="+id+";")
+      return execQuery("DELETE FROM cartridge WHERE cartridge_id=" + id + ";")
     },
   },
   data: {
@@ -82,20 +88,20 @@ module.exports = {
     },
     get: async (timestamp) => {
       if (timestamp)
-        return execQuery("SELECT * FROM data WHERE data_id = "+timestamp+";")
+        return execQuery("SELECT * FROM data WHERE data_id = " + timestamp + ";")
       else
         return execQuery("SELECT * FROM data WHERE timestamp=(SELECT max(timestamp) FROM data)")
     },
     getLastValue: async () => {
       return execQuery("SELECT * FROM data WHERE timestamp=(SELECT max(timestamp) FROM data);")
     },
-    listUtilData: async (field,limit) => {
-      return execQuery("SELECT "+field+" FROM data ORDER BY timestamp DESC LIMIT "+limit+";")
+    listUtilData: async (field, limit) => {
+      return execQuery("SELECT " + field + " FROM data ORDER BY timestamp DESC LIMIT " + limit + ";")
     },
-    update: async(id, user) => {
+    update: async (id, user) => {
     },
     delete: async (timestamp) => {
-      return execQuery("DELETE FROM data WHERE timestamp="+timestamp+";")
+      return execQuery("DELETE FROM data WHERE timestamp=" + timestamp + ";")
     },
   },
 }
