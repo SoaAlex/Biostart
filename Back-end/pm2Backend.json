@@ -1,0 +1,9 @@
+{
+    "apps": [
+        {
+            "name": "Back-end",
+            "script": "npm",
+            "args" : "start"
+        }
+    ]
+}

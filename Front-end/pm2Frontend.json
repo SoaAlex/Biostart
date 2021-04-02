@@ -1,0 +1,9 @@
+{
+    "apps": [
+        {
+            "name": "Front-end",
+            "script": "npm",
+            "args" : "serve"
+        }
+    ]
+}

@@ -7,7 +7,7 @@ const mysql = require('mysql');
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "",
+  password: "raspberry",
   database: "biostart"
 });
 
@@ -72,8 +72,19 @@ module.exports = {
   },
   data: {
     create: async (data) => {
-      timestamp = Math.round(new Date().getTime() / 1000)
-      execQuery("INSERT INTO `data` (timestamp,filter_id,flow,pressure_c1,pressure_c2) VALUES ('" + timestamp + "','" + 0 + "','" + data.flow + "','" + data.pressure_c1 + "','" + data.pressure_c2 + "');")
+      console.log(data)
+      console.log(data.volume)
+      if (!data){
+        console.log("No data")
+        throw new Error("no data")
+      }
+      if (typeof(data.flow) == "undefined")
+      {
+        console.log("No FLOW")
+        throw new Error("no flow")
+      }
+      timestamp = Math.round(new Date().getTime()/1000)
+      execQuery("INSERT INTO `data` (timestamp,filter_id,flow,pressure_c1,pressure_c2) VALUES ('"+timestamp+"','"+0+"','"+data.volume+"','"+data.pressure_c1+"','"+data.pressure_c2+"');")
     },
     get: async (timestamp) => {
       if (timestamp)
@@ -95,11 +106,12 @@ module.exports = {
   },
 }
 
-const execQuery = (query) => {
-  return new Promise((resolve, reject) => {
-    con.query(query, function (err, result, fields) {
-      if (err) throw err;
-      resolve(JSON.parse(JSON.stringify(result)))
+const execQuery = (query)=>{
+  return new Promise((resolve,reject) => {
+    con.query(query, function (err, result,fields) {
+        if (err) reject(err)
+        else 
+          resolve(JSON.parse(JSON.stringify(result)))
+      });
     });
-  });
-}
+} 

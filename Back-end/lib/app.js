@@ -80,7 +80,9 @@ app.delete("/cartridges/:id", async (req, res) => {
 
 /**************  data  ****************/
 
-app.post("/data", async (req, res) => {
+app.post("/data", async (req, res) => {  
+  if(req.body=="undefined") throw new Error("No data")
+  if(req.body.volume=="undefined") throw new Error("No volume")
   db.cartridge.updateVolume(req.body.volume)
   .then(()=>{
   db.data.create(req.body)
@@ -152,8 +154,9 @@ app.post("/data", async (req, res) => {
      })
     })
   })
+
   .catch((error)=>{
-    res.status(404).send("Error");
+    res.status(404).send("Error "+error);
   })
 });
 
@@ -254,21 +257,33 @@ app.get('/data-pressure', (req, res) => { // [0] = Pression Amont | [1] = Pressi
 })
 
 app.get('/data-flow', (req, res) => {
-  db.data.listUtilData("pressure_c1,timestamp",30)
+  db.data.listUtilData("flow,timestamp",30)
   .then((result)=>{
+
+    promArray = [];
+
     pressure_c1 = []
     time = []
+    console.log(result);
     result.forEach(element => {
-      pressure_c1.push(element.pressure_c1)
+      promArray.push(new Promise((resolve) => {
+        pressure_c1.push(element.flow)
 
-      var date = new Date(element.timestamp * 1000);
-      var hours = date.getHours();
-      var minutes = "0" + date.getMinutes();
-      var seconds = "0" + date.getSeconds();
-      var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
-      time.push(formattedTime)
+        var date = new Date(element.timestamp * 1000);
+        var hours = date.getHours();
+        var minutes = "0" + date.getMinutes();
+        var seconds = "0" + date.getSeconds();
+        var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+        time.push(formattedTime)
+        resolve();
+      }))
     });
-    res.status(201).send([pressure_c1.reverse(),time.reverse()]);
+    Promise.all(promArray).then(_ => {
+      console.log(pressure_c1);
+      res.status(201).send([pressure_c1.reverse(),time.reverse()]);
+
+    })
+    
   })
   .catch((error)=>{
     res.status(404).send("Error");
