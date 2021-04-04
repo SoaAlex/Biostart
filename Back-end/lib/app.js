@@ -101,20 +101,30 @@ app.post("/data", async (req, res) => {
       volume1 = cartridge[0].actual_volume
       volume2 = cartridge[1].actual_volume
 
-      if(cartridge[0].state==1 && RemainingFilter1<=0 && cartridge[1].state!=2 && RemainingFilter2>0){
+      if(cartridge[0].state==1 && RemainingFilter1<=0){
+        console.log("Filter1 : 2 ,Filter2 : 1")
+        filter1 = 2
+        if(cartridge[1].state!=2 && RemainingFilter2>0){
+          filter2 = 1
+        }
+      }
+      /*if(cartridge[0].state==1 && RemainingFilter1<=0 && cartridge[1].state!=2 && RemainingFilter2>0){
         console.log("Filter1 : 2 ,Filter2 : 1")
         filter1 = 2
         filter2 = 1
-      }
+      }*/
       else if(cartridge[0].state==1 && RemainingFilter1<=0 && cartridge[1].state==2){
         console.log("Filter1 : 2 ,Filter2 : 2")
         filter1 = 2
         filter2 = 2
       }
-      if(cartridge[1].state==1 && RemainingFilter2<=0 && cartridge[0].state!=2 && RemainingFilter1>0){
+      if(cartridge[1].state==1 && RemainingFilter2<=0 ){
         console.log("Filter1 : 2 ,Filter2 : 1")
         filter2 = 2
-        filter1 = 1
+        if( cartridge[0].state!=2 && RemainingFilter1>0){
+          console.log("Filter1 : 2 ,Filter2 : 1")
+          filter1 = 1
+        }
       }
       else if(cartridge[1].state==1 && RemainingFilter2<=0 && cartridge[0].state==2){
         console.log("Filter1 : 2 ,Filter2 : 2")
@@ -288,7 +298,7 @@ app.get('/data-flow', (req, res) => {
 })
 
 
-app.listen(3001, () => {
+app.listen(3000, () => {
   console.log(`Server is waiting for you at http://localhost:3001`)
 })
 
