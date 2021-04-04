@@ -83,7 +83,7 @@ export default {
       return new Promise(resolve => setTimeout(resolve, ms));
     },
     async updateState() {
-      await this.sleep(2000);
+      await this.sleep(1000);
       if (this.selected_F1 === "WATER") {
         this.axios.put(this.$store.state.serverIP + "/cartridges/1", {
           state: 1
@@ -110,6 +110,8 @@ export default {
           state: 0
         });
       }
+      await this.sleep(3000);
+      this.getState();
     },
     getState() {
       this.axios
@@ -122,7 +124,7 @@ export default {
   },
   created() {
     this.getState();
-    setInterval(this.getState, this.$store.state.UPDATE_DELAY); // On rafraichit le graphe toutes les 5 secondes
+    //setInterval(this.getState, 60000); // On rafraichit le graphe toutes les 5 secondes
   }
 };
 </script>

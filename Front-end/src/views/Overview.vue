@@ -82,7 +82,8 @@ export default {
     }
   },
   created() {
-    setInterval(this.update, 5000);
+    this.update();
+    setInterval(this.update, this.$store.state.UPDATE_DELAY);
   }
 };
 </script>

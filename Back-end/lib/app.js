@@ -95,7 +95,6 @@ app.post("/data", async (req, res) => {
     })*/
 	db.cartridge.getList()
     .then((filter)=>{
-      console.log(filter)
       res.json({0:filter[0].state,1:filter[1].state})
 	})
    })
@@ -108,7 +107,6 @@ app.post("/data", async (req, res) => {
 app.get("/data", async(req, res) => {
   db.data.get()
   .then((result)=>{
-    console.log(result);
     res.status(201).send(result);
   })
   .catch((error)=>{
@@ -208,7 +206,6 @@ app.get('/data-flow', (req, res) => {
 
     pressure_c1 = []
     time = []
-    console.log(result);
     result.forEach(element => {
       promArray.push(new Promise((resolve) => {
         pressure_c1.push(element.flow)
@@ -223,7 +220,6 @@ app.get('/data-flow', (req, res) => {
       }))
     });
     Promise.all(promArray).then(_ => {
-      console.log(pressure_c1);
       res.status(201).send([pressure_c1.reverse(),time.reverse()]);
 
     })

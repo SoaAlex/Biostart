@@ -91,7 +91,7 @@ export default {
         .then(response => (this.filterState = response.data));
 
       // Met en rouge les valeurs dépassant le seuil max de filtration filtre
-      if (this.remainingCapacity[0] <= this.$store.state.FILTER_THRESHOLD) {
+      /*if (this.remainingCapacity[0] <= this.$store.state.FILTER_THRESHOLD) {
         this.colorF1 = "#ffffff !important";
         this.backgroundColorF1 = "#ff0000";
       } else {
@@ -104,7 +104,7 @@ export default {
       } else {
         this.colorF2 = "#00b900 !important";
         this.backgroundColorF2 = "#000000";
-      }
+      }*/
     }
   }
 };
