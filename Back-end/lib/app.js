@@ -6,7 +6,7 @@ const db = require("./db");
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const port = 3000;
+const port = 3001;
 ///Add necessary element in app
 app.use(require("body-parser").json());
 //app.use(cors())
@@ -298,7 +298,7 @@ app.get('/data-flow', (req, res) => {
 })
 
 
-app.listen(3000, () => {
+app.listen(port, () => {
   console.log(`Server is waiting for you at http://localhost:3001`)
 })
 
